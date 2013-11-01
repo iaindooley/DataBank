@@ -39,7 +39,7 @@
         {
             $ret = FALSE;
 
-            isset(self::instance()->cache[$class]);
+            if(isset(self::instance()->cache[$class]))
                 $ret = self::instance()->cache[$class];
             
             return $ret;
