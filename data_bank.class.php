@@ -53,6 +53,9 @@
         
         public function __destruct()
         {
-            file_put_contents(__DIR__.'/.databank',serialize($this->cache));
+            $cache_name = __DIR__.'/.databank';
+            
+            if(is_writable($cache_name))
+                file_put_contents($cache_name,serialize($this->cache));
         }
     }
