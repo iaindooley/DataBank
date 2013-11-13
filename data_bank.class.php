@@ -3,6 +3,7 @@
     {
         private $cache;
         private static $instance = NULL;
+        private static $cache_dir = NULL;
 
         private static function instance()
         {
@@ -12,16 +13,29 @@
             return self::$instance;
         }
 
+        private static function cacheDir()
+        {
+            if(self::$cache_dir !== NULL)
+                $ret = self::$cache_dir;
+            else
+                $ret = __DIR__.'/';
+            
+            return $ret;
+        }
+
         private function __construct()
         {
             $this->cache = array();
 
-            if(file_exists(__DIR__.'/.databank'))
-                $this->cache = unserialize(file_get_contents(__DIR__.'/.databank'));
+            if(file_exists(self::cacheDir().'/.databank'))
+                $this->cache = unserialize(file_get_contents(self::cacheDir().'/.databank'));
         }
 
-        public static function autoload()
+        public static function autoload($dir = NULL)
         {
+            if($dir)
+                self::$cache_dir = $dir;
+
             return function($class)
             {
                 if(!$ret = DataBank::cached($class))
@@ -53,6 +67,6 @@
         
         public function __destruct()
         {
-            file_put_contents(__DIR__.'/.databank',serialize($this->cache));
+            file_put_contents(self::cacheDir().'/.databank',serialize($this->cache));
         }
     }
