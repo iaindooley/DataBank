@@ -43,8 +43,11 @@
                     $default = RocketSled::defaultAutoload();
                     $ret = DataBank::cache($class,$default($class));
                 }
-            
-                require_once($ret);
+
+                
+                if($ret)
+                    require_once($ret);
+
                 return $ret;
             };
         }
@@ -61,7 +64,9 @@
         
         public static function cache($class,$path)
         {
-            self::instance()->cache[$class] = $path;
+            if($path)
+                self::instance()->cache[$class] = $path;
+
             return $path;
         }
         
